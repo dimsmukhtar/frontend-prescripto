@@ -18,7 +18,7 @@ const MyProfile = () => {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem("tokenUser")
-        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/user/me`, {
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -67,7 +67,7 @@ const MyProfile = () => {
         form.append("image", formData.image)
       }
 
-      await axios.patch(`${import.meta.env.VITE_API_BASE_URL}/user/me/edit`, form, {
+      await axios.patch(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/me/edit`, form, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",

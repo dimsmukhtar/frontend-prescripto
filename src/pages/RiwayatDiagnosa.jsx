@@ -10,11 +10,14 @@ const RiwayatDiagnosa = () => {
     const fetchRiwayat = async () => {
       try {
         const token = localStorage.getItem("tokenUser")
-        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/diagnosa/riwayat`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/api/v1/diagnosa/riwayat`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
         setDiagnosas(response.data.diagnosas)
       } catch (error) {
         toast.error("Gagal memuat riwayat diagnosa.")

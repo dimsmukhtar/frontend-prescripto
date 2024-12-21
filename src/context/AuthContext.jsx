@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
 
     if (token) {
       axios
-        .get(`${import.meta.env.VITE_API_BASE_URL}/user/me`, {
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

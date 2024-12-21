@@ -2,7 +2,7 @@ import axios from "axios"
 
 export const signup = async (data) => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/user/signup`, {
+    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/signup`, {
       nama: data.nama,
       email: data.email,
       password: data.password,
@@ -15,7 +15,7 @@ export const signup = async (data) => {
 
 export const login = async (data) => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/user/login`, {
+    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/v1/user/login`, {
       email: data.email,
       password: data.password,
     })
@@ -27,9 +27,12 @@ export const login = async (data) => {
 
 export const verifyCode = async (verificationCode) => {
   try {
-    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/user/verify-email`, {
-      code: verificationCode,
-    })
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_BASE_URL}/api/v1/user/verify-email`,
+      {
+        code: verificationCode,
+      }
+    )
     return response.data
   } catch (error) {
     throw error.response?.data
@@ -38,7 +41,7 @@ export const verifyCode = async (verificationCode) => {
 
 export const getGejala = async () => {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/gejala`)
+    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/v1/gejala`)
     return response.data.gejala
   } catch (error) {
     console.error("Error fetching gejala:", error)
@@ -48,7 +51,7 @@ export const getGejala = async () => {
 
 export const getPenyakitById = async (id) => {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/penyakit/${id}`)
+    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/v1/penyakit/${id}`)
     return response.data.penyakit // Kembalikan data penyakit
   } catch (error) {
     console.error("Error fetching penyakit:", error)
@@ -61,7 +64,7 @@ export const getPenyakitById = async (id) => {
 export const getPenyakitWithGejala = async () => {
   // Your API call logic here
   try {
-    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/penyakit`)
+    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/v1/penyakit`)
     return response.data
   } catch (error) {
     console.error("Error fetching penyakit:", error)
@@ -74,11 +77,15 @@ export const getPenyakitWithGejala = async () => {
 export const submitDiagnosa = async (data) => {
   try {
     const token = localStorage.getItem("tokenUser")
-    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/diagnosa`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_BASE_URL}/api/v1/diagnosa`,
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
     return response.data
   } catch (error) {
     console.error("Error submitting diagnosa:", error)

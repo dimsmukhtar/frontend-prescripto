@@ -12,11 +12,14 @@ const Konsultasi = () => {
     const fetchQuestions = async () => {
       try {
         const token = localStorage.getItem("tokenUser")
-        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/question/konsul`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/api/v1/question/konsul`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
         setQuestions(response.data.questions || [])
       } catch (error) {
         toast.error("Gagal memuat pertanyaan.")
@@ -38,7 +41,7 @@ const Konsultasi = () => {
     try {
       const token = localStorage.getItem("tokenUser")
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/question/konsul`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/v1/question/konsul`,
         { pertanyaan },
         {
           headers: {
