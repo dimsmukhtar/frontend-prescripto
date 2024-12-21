@@ -13,7 +13,7 @@ const Contact = () => {
     {
       name: "Dimas Arga Sadewa",
       email: "argasadewa133@gmail.com",
-      instagram: "https://instagram.com/argoodd",
+      instagram: "https://instagram.com/argooddd",
       linkedin: "https://linkedin.com/in/dimas-arga-sadewa",
       github: "https://github.com/argasadewa",
     },
