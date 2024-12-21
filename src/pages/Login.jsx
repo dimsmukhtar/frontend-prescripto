@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { signup, login } from "../utils/api"
 import { toast } from "react-hot-toast" // Import Toast
+import { useNavigate } from "react-router-dom"
 
 const Login = () => {
   const [state, setState] = useState("Sign Up") // Sign Up or Login
@@ -9,6 +10,8 @@ const Login = () => {
   const [password, setPassword] = useState("")
   const [nama, setNama] = useState("")
   const [error, setError] = useState("")
+
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -21,7 +24,7 @@ const Login = () => {
 
         if (response.success) {
           toast.success(response.message) // Tampilkan pesan sukses dari API
-          window.location.replace("/verify-email") // Arahkan ke halaman Verify Email
+          navigate("/verify-email") // Arahkan ke halaman Verify Email
         }
       } else {
         // Call login API
