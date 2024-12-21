@@ -5,10 +5,12 @@ import { toast } from "react-hot-toast"
 const VerifyEmail = () => {
   const [code, setCode] = useState("")
   const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError("")
+    setLoading(true)
 
     try {
       const response = await verifyCode(code)
@@ -23,6 +25,8 @@ const VerifyEmail = () => {
     } catch (error) {
       // Menampilkan toast error
       toast.error(error.message || "Kode salah atau kadaluwarsa")
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -50,7 +54,7 @@ const VerifyEmail = () => {
         )}
 
         <button type="submit" className="bg-primary text-white w-full py-2 rounded-md text-base">
-          Verifikasi
+          {loading ? "Memverifikasi..." : "Verifikasi"}
         </button>
       </div>
     </form>

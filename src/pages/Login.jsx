@@ -10,12 +10,14 @@ const Login = () => {
   const [password, setPassword] = useState("")
   const [nama, setNama] = useState("")
   const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError("")
+    setLoading(true)
 
     try {
       if (state === "Sign Up") {
@@ -38,6 +40,8 @@ const Login = () => {
       }
     } catch (error) {
       setError(error.message || "Terjadi kesalahan. Coba lagi.")
+    } finally {
+      setLoading(false) // Set loading ke false setelah proses selesai
     }
   }
 
@@ -102,7 +106,7 @@ const Login = () => {
         )}
 
         <button type="submit" className="bg-primary text-white w-full py-2 rounded-md text-base">
-          {state === "Sign Up" ? "Buat Akun" : "Masuk"}
+          {loading ? "Loading..." : state === "Sign Up" ? "Buat Akun" : "Masuk"}
         </button>
 
         {state === "Sign Up" ? (

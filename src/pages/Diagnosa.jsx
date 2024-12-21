@@ -59,6 +59,7 @@ const Diagnosa = () => {
   }
 
   const handleSubmit = async (updatedGejala) => {
+    setLoading(true)
     try {
       const data = {
         gejala: updatedGejala, // Pastikan gejala yang dikirimkan adalah versi terbaru
@@ -120,7 +121,7 @@ const Diagnosa = () => {
           onClick={() => handleAnswer("ya")}
           className="bg-primary text-white px-6 py-3 rounded-md font-semibold hover:bg-primary-dark transition-all"
         >
-          Ya
+          {loading ? "Mendapatkan diagnosa..." : "Ya"}
         </button>
         <button
           onClick={() => handleAnswer("tidak")}
