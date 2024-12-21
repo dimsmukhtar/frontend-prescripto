@@ -56,18 +56,30 @@ export const getPenyakitById = async (id) => {
   }
 }
 
+// api.js
+
+export const getPenyakitWithGejala = async () => {
+  // Your API call logic here
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/penyakit`)
+    return response.data
+  } catch (error) {
+    console.error("Error fetching penyakit:", error)
+    throw error
+  }
+}
+
+// Ensure other functions are also exported correctly if needed
+
 export const submitDiagnosa = async (data) => {
   try {
     const token = localStorage.getItem("token")
-    const response = await axios.post(
-      `${import.meta.env.VITE_API_BASE_URL}/diagnosa`,
-      { gejala: data },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
+    console.log("Data yang dikirim ke backend:", data) // Log data
+    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/diagnosa`, data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
     return response.data
   } catch (error) {
     console.error("Error submitting diagnosa:", error)

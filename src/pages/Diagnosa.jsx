@@ -1,48 +1,78 @@
 import React, { useState, useEffect } from "react"
-import { getGejala, submitDiagnosa, getPenyakitById } from "../utils/api"
+import { getPenyakitWithGejala, submitDiagnosa } from "../utils/api"
 import { toast } from "react-hot-toast"
+import { useNavigate } from "react-router-dom"
 
 const Diagnosa = () => {
-  const [gejalaList, setGejalaList] = useState([])
-  const [selectedGejala, setSelectedGejala] = useState([])
+  const [penyakitList, setPenyakitList] = useState([])
+  const [currentPenyakitIndex, setCurrentPenyakitIndex] = useState(0) // Indeks penyakit saat ini
+  const [currentGejalaIndex, setCurrentGejalaIndex] = useState(0) // Indeks gejala saat ini
+  const [selectedGejala, setSelectedGejala] = useState([]) // Gejala yang dipilih
   const [loading, setLoading] = useState(false)
-  const [diagnosaResult, setDiagnosaResult] = useState(null) // State untuk hasil diagnosa
-  const [penyakitDetails, setPenyakitDetails] = useState(null) // State untuk detail penyakit
+  const [diagnosaResult, setDiagnosaResult] = useState(null)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
-    const fetchGejala = async () => {
+    const fetchPenyakit = async () => {
       try {
-        const gejala = await getGejala()
-        setGejalaList(gejala)
+        const data = await getPenyakitWithGejala()
+        setPenyakitList(data)
       } catch (error) {
-        toast.error("Gagal memuat data gejala.")
+        toast.error("Gagal memuat data penyakit dan gejala.")
       }
     }
-    fetchGejala()
+    fetchPenyakit()
   }, [])
 
-  const handleCheckboxChange = (gejalaId) => {
-    setSelectedGejala((prev) =>
-      prev.includes(gejalaId) ? prev.filter((id) => id !== gejalaId) : [...prev, gejalaId]
-    )
+  const handleAnswer = (answer) => {
+    const currentPenyakit = penyakitList[currentPenyakitIndex]
+
+    if (answer === "ya") {
+      const selectedGejalaId = currentPenyakit.gejala[currentGejalaIndex].id
+
+      // Tambahkan gejala ke daftar yang dipilih
+      setSelectedGejala((prev) => {
+        const updatedGejala = [...prev, selectedGejalaId]
+
+        // Jika semua gejala untuk penyakit ini sudah terjawab, kirim data ke backend
+        if (currentGejalaIndex + 1 >= currentPenyakit.gejala.length) {
+          handleSubmit(updatedGejala) // Kirimkan gejala yang sudah diperbarui
+        } else {
+          // Lanjutkan ke gejala berikutnya
+          setCurrentGejalaIndex((prevIndex) => prevIndex + 1)
+        }
+
+        return updatedGejala
+      })
+    } else {
+      // Jika "tidak", lanjutkan ke penyakit berikutnya
+      if (currentPenyakitIndex + 1 >= penyakitList.length) {
+        toast.error("Tidak ada penyakit yang terdiagnosa.")
+        setDiagnosaResult("Tidak terdiagnosa penyakit.")
+        return
+      }
+
+      setCurrentPenyakitIndex((prevIndex) => prevIndex + 1)
+      setCurrentGejalaIndex(0) // Reset indeks gejala
+    }
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (selectedGejala.length === 0) {
-      toast.error("Pilih minimal satu gejala.")
-      return
-    }
-
-    setLoading(true)
+  const handleSubmit = async (updatedGejala) => {
     try {
-      const result = await submitDiagnosa(selectedGejala) // Kirim data gejala ke backend
-      setDiagnosaResult(result.diagnosa) // Simpan hasil diagnosa
+      const data = {
+        gejala: updatedGejala, // Pastikan gejala yang dikirimkan adalah versi terbaru
+      }
+      console.log("selected gejala:", data)
 
-      // Panggil API untuk mendapatkan detail penyakit
-      const details = await getPenyakitById(result.diagnosa.id_penyakit)
-      setPenyakitDetails(details) // Simpan detail penyakit
-      toast.success("Diagnosa berhasil!")
+      const result = await submitDiagnosa(data)
+      setDiagnosaResult(result.hasil)
+
+      if (result.success) {
+        toast.success("Diagnosa berhasil!")
+      } else {
+        toast.error(result.message)
+      }
     } catch (error) {
       toast.error(error?.message || "Gagal mengirim diagnosa.")
     } finally {
@@ -50,28 +80,26 @@ const Diagnosa = () => {
     }
   }
 
-  // Jika diagnosa sudah ada, tampilkan hasilnya
-  if (penyakitDetails) {
+  if (diagnosaResult) {
     return (
       <div className="min-h-screen py-10 px-5 md:px-20">
         <h1 className="text-3xl font-bold text-primary mb-6">Hasil Diagnosa Anda</h1>
         <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-            {penyakitDetails.nama} {/* Nama penyakit */}
-          </h2>
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">{diagnosaResult.nama}</h2>
           <p className="text-gray-700 mb-3">
-            <span className="font-semibold">Deskripsi:</span> {penyakitDetails.deskripsi}
+            <span className="font-semibold">Deskripsi:</span> {diagnosaResult.deskripsi}
           </p>
           <p className="text-gray-700 mb-3">
-            <span className="font-semibold">Solusi:</span> {penyakitDetails.solusi}
+            <span className="font-semibold">Solusi:</span> {diagnosaResult.solusi}
           </p>
         </div>
         <button
           onClick={() => {
-            setDiagnosaResult(null)
-            setPenyakitDetails(null) // Reset hasil dan detail penyakit
-            setSelectedGejala([]) // Reset pilihan gejala
-          }}
+            setDiagnosaResult(null) // Hapus hasil diagnosa
+            setSelectedGejala([]) // Reset gejala yang dipilih
+            setCurrentPenyakitIndex(0) // Reset indeks penyakit
+            setCurrentGejalaIndex(0) // Reset indeks gejala
+          }} // Refresh untuk diagnosa ulang
           className="mt-6 bg-primary text-white px-8 py-3 rounded-md font-semibold hover:bg-primary-dark transition-all"
         >
           Diagnosa Ulang
@@ -80,40 +108,28 @@ const Diagnosa = () => {
     )
   }
 
-  // Jika diagnosaResult null, tampilkan pertanyaan
   return (
     <div className="min-h-screen py-10 px-5 md:px-20">
       <h1 className="text-3xl font-bold text-primary mb-6">Diagnosa Kesehatan Gigi Anda</h1>
-      <p className="mb-8 text-gray-700">Jawab pertanyaan berikut sesuai dengan kondisi Anda:</p>
-      {gejalaList.length === 0 ? (
-        <p className="text-gray-500">Memuat gejala...</p>
-      ) : (
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {gejalaList.map((gejala) => (
-              <label
-                key={gejala.id}
-                className="flex items-center gap-3 bg-gray-100 p-4 rounded shadow-sm cursor-pointer hover:shadow-lg transition-all"
-              >
-                <input
-                  type="checkbox"
-                  value={gejala.id}
-                  onChange={() => handleCheckboxChange(gejala.id)}
-                  className="w-5 h-5 text-primary focus:ring-primary border-gray-300 rounded"
-                />
-                <span className="text-gray-800">{gejala.deskripsi}</span>
-              </label>
-            ))}
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-6 bg-primary text-white px-8 py-3 rounded-md font-semibold hover:bg-primary-dark transition-all"
-          >
-            {loading ? "Mengirim..." : "Diagnosa Sekarang"}
-          </button>
-        </form>
-      )}
+      <p className="mb-8 text-gray-700">
+        {penyakitList.length > 0
+          ? penyakitList[currentPenyakitIndex]?.gejala[currentGejalaIndex]?.deskripsi
+          : "Memuat pertanyaan..."}
+      </p>
+      <div className="flex gap-4">
+        <button
+          onClick={() => handleAnswer("ya")}
+          className="bg-primary text-white px-6 py-3 rounded-md font-semibold hover:bg-primary-dark transition-all"
+        >
+          Ya
+        </button>
+        <button
+          onClick={() => handleAnswer("tidak")}
+          className="bg-gray-300 text-gray-700 px-6 py-3 rounded-md font-semibold hover:bg-gray-400 transition-all"
+        >
+          Tidak
+        </button>
+      </div>
     </div>
   )
 }

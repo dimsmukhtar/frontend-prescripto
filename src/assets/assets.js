@@ -34,6 +34,9 @@ import Dermatologist from "./Dermatologist.svg"
 import Gastroenterologist from "./Gastroenterologist.svg"
 import General_physician from "./General_physician.svg"
 import dimasimg from "./dimasimg.jpg"
+import argaimg from "./argaimg.jpg"
+import candraimg from "./candraimg.jpg"
+import linaimg from "./linaimg.jpg"
 import Gynecologist from "./Gynecologist.svg"
 import Neurologist from "./Neurologist.svg"
 import Pediatricians from "./Pediatricians.svg"
@@ -65,15 +68,15 @@ export const specialityData = [
   },
   {
     speciality: "Dimas Arga Sadewa",
-    image: dimasimg,
+    image: argaimg,
   },
   {
     speciality: "Chandra Dwi Setiawan",
-    image: dimasimg,
+    image: candraimg,
   },
   {
     speciality: "Lina Setiawati",
-    image: dimasimg,
+    image: linaimg,
   },
 ]
 

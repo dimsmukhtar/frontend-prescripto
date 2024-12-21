@@ -10,7 +10,7 @@ import Footer from "./components/Footer"
 import VerifyEmail from "./pages/VerifyEmail"
 import { Toaster } from "react-hot-toast" // Import Toaster
 import ProtectedRoute from "./components/ProtectedRoute"
-import Diagnosa from "./pages/DIagnosa"
+import Diagnosa from "./pages/Diagnosa"
 import RiwayatDiagnosa from "./pages/RiwayatDiagnosa"
 import Konsultasi from "./pages/Konsultasi"
 
