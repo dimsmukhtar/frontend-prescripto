@@ -9,7 +9,7 @@ const RiwayatDiagnosa = () => {
   useEffect(() => {
     const fetchRiwayat = async () => {
       try {
-        const token = localStorage.getItem("token")
+        const token = localStorage.getItem("tokenUser")
         const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/diagnosa/riwayat`, {
           headers: {
             Authorization: `Bearer ${token}`,

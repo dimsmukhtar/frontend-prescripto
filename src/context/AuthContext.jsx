@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     // Cek token di localStorage saat aplikasi pertama kali dimuat
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("tokenUser")
 
     if (token) {
       axios
@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   const logout = () => {
-    localStorage.removeItem("token")
+    localStorage.removeItem("tokenUser")
     setUser(null)
     setIsAuthenticated(false)
   }

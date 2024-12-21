@@ -73,8 +73,7 @@ export const getPenyakitWithGejala = async () => {
 
 export const submitDiagnosa = async (data) => {
   try {
-    const token = localStorage.getItem("token")
-    console.log("Data yang dikirim ke backend:", data) // Log data
+    const token = localStorage.getItem("tokenUser")
     const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/diagnosa`, data, {
       headers: {
         Authorization: `Bearer ${token}`,

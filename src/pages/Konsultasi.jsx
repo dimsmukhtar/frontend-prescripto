@@ -11,7 +11,7 @@ const Konsultasi = () => {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const token = localStorage.getItem("token")
+        const token = localStorage.getItem("tokenUser")
         const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/question/konsul`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -36,7 +36,7 @@ const Konsultasi = () => {
     }
 
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("tokenUser")
       const response = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/question/konsul`,
         { pertanyaan },

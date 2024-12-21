@@ -17,7 +17,7 @@ const MyProfile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const token = localStorage.getItem("token")
+        const token = localStorage.getItem("tokenUser")
         const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/user/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -59,7 +59,7 @@ const MyProfile = () => {
     setLoading(true)
 
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("tokenUser")
       const form = new FormData()
       form.append("nama", formData.nama)
       form.append("email", formData.email)

@@ -29,7 +29,7 @@ const Login = () => {
 
         if (response.success) {
           toast.success(response.message)
-          localStorage.setItem("token", response.token)
+          localStorage.setItem("tokenUser", response.token)
           window.location.replace("/") // Redirect ke home setelah login
         }
       }

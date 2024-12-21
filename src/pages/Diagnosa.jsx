@@ -63,7 +63,6 @@ const Diagnosa = () => {
       const data = {
         gejala: updatedGejala, // Pastikan gejala yang dikirimkan adalah versi terbaru
       }
-      console.log("selected gejala:", data)
 
       const result = await submitDiagnosa(data)
       setDiagnosaResult(result.hasil)
